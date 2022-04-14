@@ -26,15 +26,25 @@
       </div>
       <!--头部第二行 搜索区域-->
       <div class="bottom">
-          <h1 class="logoArea">
-              <a class="logo" title="智品汇" href="###" target="_blank">
-                  <img src="@/assets/images/zz_logo.jpg" alt="">
+          <h1 class="logoArea" @click="$router.push('/home')">
+              <a class="logo" title="智品汇" target="_blank">
+                  <img src="@/assets/images/zz_logo.jpg" alt="" >
               </a>
           </h1>
           <div class="searchArea">
-              <form action="###" class="searchForm">
-                  <input type="text" id="autocomplete" class="input-error input-xxlarge" />
-                  <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
+              <form class="searchForm">
+                  <input
+                  type="text"
+                  id="autocomplete"
+                  class="input-error input-xxlarge"
+                   v-model="kw"
+                  @keyup.enter="goSearch"
+                  />
+                  <button
+                  class="sui-btn btn-xlarge
+                  btn-danger" type="button"
+                  @click="goSearch"
+                  >搜索</button>
               </form>
           </div>
       </div>
@@ -43,7 +53,17 @@
 
 <script>
   export default {
-    name:'AppHeader' 
+    name:'AppHeader',
+    data(){
+      return{
+          kw:''
+      }
+    },
+    methods:{
+      goSearch(){
+       this.$router.push({ name:'search', params:{ kw:this.kw || undefined}})
+      }
+    }
   }
 </script>
 

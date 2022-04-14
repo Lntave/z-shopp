@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 导入布局组件
 import Layout from '@/Layout'
-import rest from '@/css/rest.css'
 
 Vue.use(VueRouter)
 
@@ -14,9 +13,9 @@ const routes = [
     redirect: '/home',
     children: [
       // 主页
-      { path: '/home', component: () => import('@/views/home/index') },
+      { path: '/home', component: () => import('@/views/home') },
       // 搜索页
-      { path: '/search', component: () => import('@/views/search/index') }
+      { path: '/search/:kw?', component: () => import('@/views/search'), name:'search'}
     ]
   }
 ]
@@ -24,5 +23,11 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+const vuePush = router.push
+VueRouter.prototype.push= function (location,cd1,cd2){
+  if(cd1 || cd2)return vuePush.call(this,location,cd1,cd2)
+  return vuePush.call(this,location, () => {})
+}
 
 export default router
