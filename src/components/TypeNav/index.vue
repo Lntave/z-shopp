@@ -53,7 +53,7 @@
 
 <script>
 // 导入API接口函数
-// import { getCategoryList } from '@/api'
+import { getCategoryList } from '@/api'
 
 export default {
   name: 'TypeNav',
@@ -73,12 +73,6 @@ export default {
     // 调用获取导航分类接口
     const res = await getCategoryList()
     this.navList = res.data.data
-  },
-   mounted(){
-   // 发起请求  获取导航分类
-    this.$http.get('http://39.98.123.211/api/product/getBaseCategoryList').then(res => {
-      this.navList = res.data.data
-    })
   }
 }
 </script>
