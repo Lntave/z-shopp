@@ -98,9 +98,9 @@
 </template>
 
 <script>
-  export default {
-    name:'AppFooter'
-  }
+export default {
+  name: 'AppFooter'
+}
 </script>
 
 <style lang="scss" scoped>

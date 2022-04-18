@@ -21,8 +21,7 @@ import Brand from './components/Brand'
 
 export default {
   name: 'HomeView',
-  components: { List, Recommend, Like, Rank, Floor, Brand },
- 
+  components: { List, Recommend, Like, Rank, Floor, Brand }
 }
 </script>
 

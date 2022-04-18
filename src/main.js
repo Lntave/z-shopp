@@ -2,17 +2,21 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import rest from '@/css/rest.css'
+
+// 导入mockJS 开启mock服务器
+import '@/mock'
+
 import TypeNav from '@/components/TypeNav'
-// 导入axios
-import Axios from 'axios'
+
+// 初始化CSS
+// import 'normalize.css'
+// 重置CSS
+import './styles/reset.scss'
 
 Vue.config.productionTip = false
 
-Vue.component('TypeNav',TypeNav)
-
-// 将Axios添加到vue实例中
-Vue.prototype.$http = Axios
+// 全局注册导航分类组件
+Vue.component('TypeNav', TypeNav)
 
 new Vue({
   router,

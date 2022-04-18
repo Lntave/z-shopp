@@ -26,45 +26,54 @@
       </div>
       <!--头部第二行 搜索区域-->
       <div class="bottom">
-          <h1 class="logoArea" @click="$router.push('/home')">
-              <a class="logo" title="智品汇" target="_blank">
-                  <img src="@/assets/images/zz_logo.jpg" alt="" >
-              </a>
+          <h1 class="logoArea">
+              <router-link class="logo" title="智品汇" to="/">
+                  <img src="@/assets/images/zz_logo.jpg" alt="">
+              </router-link >
           </h1>
           <div class="searchArea">
-              <form class="searchForm">
-                  <input
-                  type="text"
-                  id="autocomplete"
-                  class="input-error input-xxlarge"
-                   v-model="kw"
-                  @keyup.enter="goSearch"
-                  />
-                  <button
-                  class="sui-btn btn-xlarge
-                  btn-danger" type="button"
-                  @click="goSearch"
-                  >搜索</button>
-              </form>
+            <form class="searchForm">
+              <input
+                type="text"
+                id="autocomplete"
+                class="input-error input-xxlarge"
+                v-model="kw"
+                @keyup.enter="goSearch"
+              />
+              <button
+                class="sui-btn btn-xlarge btn-danger"
+                type="button"
+                @click="goSearch"
+              >
+                搜索
+              </button>
+            </form>
           </div>
       </div>
   </header>
 </template>
 
 <script>
-  export default {
-    name:'AppHeader',
-    data(){
-      return{
-          kw:''
-      }
-    },
-    methods:{
-      goSearch(){
-       this.$router.push({ name:'search', params:{ kw:this.kw || undefined}})
-      }
+export default {
+  name: 'AppHeader',
+  data () {
+    return {
+      kw: ''
+    }
+  },
+  methods: {
+    goSearch () {
+      // 使用编程式导航时： 重复跳转同一路由 会产生报错
+      // 报错原因： push在跳转后会返回2个回调函数  成功则触发then函数 失败触发catch函数
+      //           使用时并没有捕获catch错误 那么就会将错误输出
+      // this.$router.push('/search', () => {})
+      // this.$router.push('/search')
+      // 跳转到搜索页面 并将关键字 通过动态路由传入
+      // 匹配结果为空时需要传递 undefined
+      this.$router.push({ name: 'search', params: { kw: this.kw || undefined } })
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

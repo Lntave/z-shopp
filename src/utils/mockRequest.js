@@ -1,10 +1,10 @@
-// 封装请求库
+// 封装mock请求库
 import Axios from 'axios'
 
 // 通过create创建axios实例
 const request = Axios.create({
   // 配置公共请求地址
-  baseURL: 'http://39.98.123.211',
+  baseURL: '/mock',
   // 请求超时时间
   timeout: 5000
 })

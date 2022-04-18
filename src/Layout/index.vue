@@ -1,17 +1,19 @@
 <template>
   <div class="layout-view">
-      <AppHeader></AppHeader>
-      <router-view></router-view>
-      <AppFooter></AppFooter>
-    </div>
+    <AppHeader />
+    <router-view></router-view>
+    <AppFooter />
+  </div>
 </template>
 
 <script>
-import AppHeader from '@/Layout/components/AppHeader.vue'
-import AppFooter from '@/Layout/components/AppFooter.vue'
-  export default {
-    components:{AppHeader, AppFooter}
-  }
+import AppHeader from './components/AppHeader'
+import AppFooter from './components/AppFooter'
+
+export default {
+  name: 'Layout',
+  components: { AppHeader, AppFooter }
+}
 </script>
 
 <style lang="scss" scoped>

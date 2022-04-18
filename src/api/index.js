@@ -1,5 +1,6 @@
 // 所有请求接口的集合
 import request from '@/utils/request'
+import mockRequest from '@/utils/mockRequest'
 
 // 获取 分类导航
 export const getCategoryList = () => {
@@ -7,7 +8,10 @@ export const getCategoryList = () => {
   return request({
     method: 'get',
     url: '/api/product/getBaseCategoryList'
-  }).then(res => {
-    console.log(res);
   })
+}
+
+// 获取 首页轮播图
+export const getBanner = (data) => {
+  return mockRequest({ method: 'get', url: '/banner', data })
 }

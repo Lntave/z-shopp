@@ -53,9 +53,9 @@ hr {
     height: 1px;
 }
 .clearFix::after{
-  content:"";
-  display: block;
-  clear:both;
+	content:"";
+	display: block;
+	clear:both;
 }
 /* 让非ie浏览器默认也显示垂直滚动条，防止因滚动条引起的闪烁 */
 html { overflow-y: scroll; }
