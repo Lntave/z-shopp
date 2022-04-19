@@ -2,7 +2,46 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
       <div class="container">
-          <h2 class="all">全部商品分类</h2>
+          <div class="sort-nav" @mouseleave="hideSort">
+            <h2 class="all" @mouseenter="isShow = true">全部商品分类</h2>
+            <transition name="sort">
+              <div class="sort" v-show="isShow">
+                <!-- 鼠标移出时 清除activeId -->
+                <div class="all-sort-list2" @mouseleave="activeId = null">
+                    <!-- 鼠标移入 给移入元素添加 active类名 -->
+                    <div
+                      class="item"
+                      :class="{ active: activeId === cate1.categoryId}"
+                      v-for="cate1 in navList"
+                      :key="cate1.categoryId"
+                      @mouseenter="addActive(cate1.categoryId)"
+                      @click="goSearch"
+                    >
+                        <h3>
+                            <!-- 一级分类 -->
+                            <a :data-category-name="cate1.categoryName" :data-category1-id="cate1.categoryId">{{cate1.categoryName}}</a>
+                        </h3>
+                        <div class="item-list clearfix">
+                            <div class="subitem">
+                                <dl class="fore" v-for="cate2 in cate1.categoryChild" :key="cate2.categoryId">
+                                    <dt>
+                                        <!-- 二级分类 -->
+                                        <a :data-category-name="cate2.categoryName" :data-category2-id="cate2.categoryId">{{cate2.categoryName}}</a>
+                                    </dt>
+                                    <dd>
+                                        <em v-for="cate3 in cate2.categoryChild" :key="cate3.categoryId">
+                                            <!-- 三级分类 -->
+                                            <a :data-category-name="cate3.categoryName" :data-category3-id="cate3.categoryId">{{cate3.categoryName}}</a>
+                                        </em>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </transition>
+          </div>
           <nav class="nav">
               <a href="###">服装城</a>
               <a href="###">美妆馆</a>
@@ -13,56 +52,28 @@
               <a href="###">有趣</a>
               <a href="###">秒杀</a>
           </nav>
-          <div class="sort">
-              <!-- 鼠标移出时 清除activeId -->
-              <div class="all-sort-list2" @mouseleave="activeId = null">
-                  <!-- 鼠标移入 给移入元素添加 active类名 -->
-                  <div
-                    class="item"
-                    :class="{ active: activeId === cate1.categoryId}"
-                    v-for="cate1 in navList"
-                    :key="cate1.categoryId"
-                    @mouseenter="addActive(cate1.categoryId)"
-                  >
-                      <h3>
-                          <!-- 一级分类 -->
-                          <a href="">{{cate1.categoryName}}</a>
-                      </h3>
-                      <div class="item-list clearfix">
-                          <div class="subitem">
-                              <dl class="fore" v-for="cate2 in cate1.categoryChild" :key="cate2.categoryId">
-                                  <dt>
-                                      <!-- 二级分类 -->
-                                      <a href="">{{cate2.categoryName}}</a>
-                                  </dt>
-                                  <dd>
-                                      <em v-for="cate3 in cate2.categoryChild" :key="cate3.categoryId">
-                                          <!-- 三级分类 -->
-                                          <a href="">{{cate3.categoryName}}</a>
-                                      </em>
-                                  </dd>
-                              </dl>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
       </div>
   </div>
 </template>
 
 <script>
-// 导入API接口函数
-import { getCategoryList } from '@/api'
 // 按需导入lodash中的节流函数
 import { throttle } from 'lodash/function'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TypeNav',
   data () {
     return {
-      navList: [], // 导航列表
-      activeId: null // 当前移入item的ID
+      activeId: null, // 当前移入item的ID
+      isShow: false
+    }
+  },
+  computed: {
+    ...mapState('home', ['navList']),
+    // 是否为首页： 首页 true 不是首页 false
+    isHome () {
+      return this.$route.path === '/home'
     }
   },
   methods: {
@@ -71,12 +82,28 @@ export default {
     addActive: throttle(function (id) {
       // 移入时将当前item的id保存
       this.activeId = id
-    }, 30)
+    }, 30),
+    // 跳转搜索页面
+    goSearch (e) {
+      // 识别当前点击的元素为 1级、2级、3级  category1Id  category2Id
+      // 通过给1级、2级、3级分类添加属性 来区别当前元素是否为1级、2级、3级
+      // 使用JS获取元素中的data-属性
+      const { categoryName, category1Id, category2Id, category3Id } = e.target.dataset
+      // 如果没有categoryName值 说明不能1级、2级、3级分类
+      if (!categoryName) return
+      // undefined值不会通过URL传递
+      this.$router.push({ name: 'search', query: { categoryName, category1Id, category2Id, category3Id }, params: this.$route.params })
+    },
+    // 隐藏导航
+    hideSort () {
+      // 判断是否为首页 -> 是首页  停止执行代码
+      if (this.isHome) return
+      this.isShow = false
+    }
   },
-  async mounted () {
-    // 调用获取导航分类接口
-    const res = await getCategoryList()
-    this.navList = res.data.data
+  mounted () {
+    // 判断当前页面是否为首页
+    this.isShow = this.isHome
   }
 }
 </script>
@@ -142,6 +169,9 @@ export default {
                           color: #333;
                       }
                   }
+                  a {
+                    cursor: pointer;
+                  }
 
                   .item-list {
                       display: none;
@@ -205,6 +235,13 @@ export default {
               }
           }
       }
+      .sort-leave-active, .sort-enter-active {
+        transition: all .3s ease;
+      }
+      .sort-leave-to, .sort-enter {
+        opacity: 0;
+      }
+
   }
 }
 </style>
