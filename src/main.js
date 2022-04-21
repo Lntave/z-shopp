@@ -10,7 +10,7 @@ import TypeNav from '@/components/TypeNav'
 import Slide from '@/components/Slide'
 
 // 初始化CSS
-import 'normalize.css'
+// import 'normalize.css'
 // 重置CSS
 import './styles/reset.scss'
 
@@ -19,6 +19,9 @@ Vue.config.productionTip = false
 // 全局注册导航分类组件
 Vue.component('TypeNav', TypeNav)
 Vue.component('Slide', Slide)
+
+//
+Vue.prototype.$bus = new Vue()
 
 new Vue({
   router,

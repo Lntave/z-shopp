@@ -10,19 +10,19 @@
         {{searchQuery}}
           <!-- 分类 面包屑 -->
           <li class="with-x" v-if="searchQuery.categoryName">
-            {{searchQuery.categoryName}}<i>×</i>
+            {{searchQuery.categoryName}}<i @click="$emit('delCategoryName')">×</i>
           </li>
           <!-- 关键词 面包屑 -->
           <li class="with-x" v-if="searchQuery.keyword">
-            {{searchQuery.keyword}}<i>×</i>
+            {{searchQuery.keyword}}<i @click="$emit('delKeyword')">×</i>
           </li>
           <!-- 品牌 面包屑 -->
           <li class="with-x" v-if="searchQuery.trademark">
-            {{searchQuery.trademark.split(':')[1]}}<i>×</i>
+            {{searchQuery.trademark.split(':')[1]}}<i @click="$emit('delTrademark')">×</i>
           </li>
-          <!-- 品牌 面包屑 -->
-          <li class="with-x" v-for="attrs in searchQuery.props" :key="attrs">
-            {{attrs.split(':')[1]}}<i>×</i>
+          <!-- 属性 面包屑 -->
+          <li class="with-x" v-for="attrs, i in searchQuery.props" :key="attrs">
+            {{attrs.split(':')[1]}}<i @click="$emit('delProps',i)">×</i>
           </li>
       </ul>
   </div>

@@ -6,7 +6,10 @@
     <div class="main">
         <div class="py-container">
             <!-- 面包屑 -->
-            <Bread :searchQuery="searchQuery" />
+            <Bread :searchQuery="searchQuery"
+            @delCategoryName="delCategoryName"
+            @delTrademark="delTrademark"
+            />
             <!-- 筛选 选择 -->
             <Selector @changeTrademark="changeTrademark" @changeAttrs="changeAttrs"/>
             <!--商品列表-->
@@ -14,23 +17,11 @@
                 <div class="sui-navbar">
                     <div class="navbar-inner filter">
                         <ul class="sui-nav">
-                            <li class="active">
-                                <a href="#">综合</a>
+                            <li @click="changeSort(1)" :class="{ active: isOne}">
+                                <a>综合 <span v-show="isOne">{{isDesc}}</span></a>
                             </li>
-                            <li>
-                                <a href="#">销量</a>
-                            </li>
-                            <li>
-                                <a href="#">新品</a>
-                            </li>
-                            <li>
-                                <a href="#">评价</a>
-                            </li>
-                            <li>
-                                <a href="#">价格⬆</a>
-                            </li>
-                            <li>
-                                <a href="#">价格⬇</a>
+                            <li @click="changeSort(2)" :class="{ active: !isOne}">
+                                <a>价格<span v-show="!isOne">{{isDesc}}</span></a>
                             </li>
                         </ul>
                     </div>
@@ -84,12 +75,21 @@ export default {
       // 搜索参数
       searchQuery: {
         props: [], // 属性
-        trademark: undefined // 品牌
+        trademark: undefined, // 品牌
+        order:'1:desc',
+        pageNo:1,
+        pageSize:10,
       }
     }
   },
   computed: {
-    ...mapGetters('search', ['goodsList'])
+    ...mapGetters('search', ['goodsList']),
+    isOne(){
+        return this.searchQuery.order.includes('1')
+    },
+    isDesc(){
+        return this.searchQuery.order.includes('desc') ? '↓' : '⬆'
+    }
   },
   watch: {
     // 监听 $route的改变 （监听路由的改变）
@@ -125,6 +125,40 @@ export default {
       this.searchQuery.props.push(attrs)
       // 3. 调用函数 获取搜索结果
       this.getSearch()
+    },
+    // 移除分类面包屑
+    delCategoryName(){
+      this.searchQuery.categoryName = undefined
+      this.searchQuery.category1Id = undefined
+      this.searchQuery.category2Id = undefined
+      this.searchQuery.category3Id = undefined
+      // 通过跳转路由的形式 去更改传递的查询字符串
+      this.$$router.push({name: 'search', params: this.$route.params})
+      // this.getSearch()
+    },
+    delKeyword(){
+      this.searchQuery.keyword = undefined
+      this.$bus.$emit('cleanKey')
+      this.$storer.push({name: 'search', query: this.$route.query})
+    },
+    // 移除品牌
+    delTrademark(){
+      this.searchQuery.trademark = undefined
+      this.getSearch()
+    },
+    // 移除属性
+    delProps(i){
+      this.searchQuery.props.splice(i,1)
+      // 2.调用函数 获取搜索结果
+      this.getSearch()
+    },
+    changeSort(sort){
+         var sort2 = ''
+        if (this.searchQuery.order.includes(sort)){
+          sort2 = this.searchQuery.order.includes('desc') ? 'asc' : 'desc'
+        }
+        this.searchQuery.order = `${sort}:${sort2}`
+        this.getSearch()
     }
   }
 }
@@ -165,6 +199,9 @@ export default {
                               padding: 11px 15px;
                               color: #777;
                               text-decoration: none;
+                              &:hover{
+                                  color: #777;
+                              }
                           }
                           &.active{
                               a{
