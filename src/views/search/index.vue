@@ -6,9 +6,12 @@
     <div class="main">
         <div class="py-container">
             <!-- 面包屑 -->
-            <Bread :searchQuery="searchQuery"
-            @delCategoryName="delCategoryName"
-            @delTrademark="delTrademark"
+            <Bread
+              :searchQuery="searchQuery"
+              @delCategoryName="delCategoryName"
+              @delKeyword="delKeyword"
+              @delTrademark="delTrademark"
+              @delProps="delProps"
             />
             <!-- 筛选 选择 -->
             <Selector @changeTrademark="changeTrademark" @changeAttrs="changeAttrs"/>
@@ -17,11 +20,11 @@
                 <div class="sui-navbar">
                     <div class="navbar-inner filter">
                         <ul class="sui-nav">
-                            <li @click="changeSort(1)" :class="{ active: isOne}">
-                                <a>综合 <span v-show="isOne">{{isDesc}}</span></a>
+                            <li :class="{ active: isOne }" @click="changeSort(1)">
+                                <a href="javascript:">综合 <span v-show="isOne">{{isDesc}}</span></a>
                             </li>
-                            <li @click="changeSort(2)" :class="{ active: !isOne}">
-                                <a>价格<span v-show="!isOne">{{isDesc}}</span></a>
+                            <li :class="{ active: !isOne }" @click="changeSort(2)">
+                                <a href="javascript:">价格 <span v-show="!isOne">{{isDesc}}</span></a>
                             </li>
                         </ul>
                     </div>
@@ -31,16 +34,18 @@
                         <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                             <div class="list-wrap">
                                 <div class="p-img">
-                                    <a><img :src="goods.defaultImg" /></a>
+                                    <router-link :to="{ name: 'detail', params: { skuId: goods.id }}">
+                                      <img :src="goods.defaultImg" />
+                                    </router-link>
                                 </div>
                                 <div class="price">
-                                    <strong>
+                                    <router-link tag="strong" :to="{ name: 'detail', params: { skuId: goods.id }}">
                                         <em>¥</em>
                                         <i> {{goods.price.toFixed(2)}}</i>
-                                    </strong>
+                                    </router-link>
                                 </div>
                                 <div class="attr">
-                                    <a :title="goods.title" v-html="goods.title"></a>
+                                    <router-link :to="{ name: 'detail', params: { skuId: goods.id }}" :title="goods.title" v-html="goods.title"></router-link>
                                 </div>
                                 <div class="commit">
                                     <i class="command">已有<span>{{goods.id}}</span>人评价</i>
@@ -54,7 +59,7 @@
                     </ul>
                 </div>
                 <!-- 分页器 -->
-                <Pagination />
+                <Pagination :total="total" :pageSize="10" :page="searchQuery.pageNo" @pageChange="pageChange" />
             </div>
         </div>
     </div>
@@ -76,19 +81,21 @@ export default {
       searchQuery: {
         props: [], // 属性
         trademark: undefined, // 品牌
-        order:'1:desc',
-        pageNo:1,
-        pageSize:10,
+        order: '1:desc', // 排序
+        pageNo: 1,
+        pageSize: 10
       }
     }
   },
   computed: {
-    ...mapGetters('search', ['goodsList']),
-    isOne(){
-        return this.searchQuery.order.includes('1')
+    ...mapGetters('search', ['goodsList', 'total']),
+    // 是否为综合排序
+    isOne () {
+      return this.searchQuery.order.includes('1')
     },
-    isDesc(){
-        return this.searchQuery.order.includes('desc') ? '↓' : '⬆'
+    // 是否为降序
+    isDesc () {
+      return this.searchQuery.order.includes('desc') ? '⬇' : '⬆'
     }
   },
   watch: {
@@ -96,7 +103,7 @@ export default {
     $route: {
       handler () {
         // 1 设置搜索参数 将查询字符串对象与路由对象合并到搜索参数中
-        this.searchQuery = { ...this.searchQuery, ...this.$route.query, ...this.$route.params }
+        this.searchQuery = { ...this.searchQuery, ...this.$route.query, ...this.$route.params, pageNo: 1 }
         // 2. 调用函数获取查询结果
         this.getSearch()
       },
@@ -112,6 +119,7 @@ export default {
     changeTrademark (trademark) {
       // 1. 设置品牌搜索参数   品牌ID:品牌名
       this.searchQuery.trademark = `${trademark.tmId}:${trademark.tmName}`
+      this.searchQuery.pageNo = 1
       // 2. 调用函数搜索结果
       this.getSearch()
     },
@@ -123,42 +131,61 @@ export default {
       if (this.searchQuery.props.includes(attrs)) return
       // 2. 将改好的属性值 添加到属性组中
       this.searchQuery.props.push(attrs)
+      this.searchQuery.pageNo = 1
       // 3. 调用函数 获取搜索结果
       this.getSearch()
     },
+    // 排序更改
+    changeSort (sort) {
+      let sort2 = 'desc'
+      // 1. 设置排序规则
+      // 1.1  如何知道是否要更改  降序或升序（当前排序规则一致时）
+      if (this.searchQuery.order.includes(sort)) {
+        sort2 = this.searchQuery.order.includes('desc') ? 'asc' : 'desc'
+      }
+      this.searchQuery.order = `${sort}:${sort2}`
+      // 2. 调用函数 获取搜索结果
+      this.getSearch()
+    },
+    // 页码改变
+    pageChange (i) {
+      // 1. 改变参数页码
+      this.searchQuery.pageNo = i
+      // 2. 调用函数 获取搜索结果
+      this.getSearch()
+    },
     // 移除分类面包屑
-    delCategoryName(){
+    delCategoryName () {
+      // 1. 设置分类名为空
       this.searchQuery.categoryName = undefined
       this.searchQuery.category1Id = undefined
       this.searchQuery.category2Id = undefined
       this.searchQuery.category3Id = undefined
       // 通过跳转路由的形式 去更改传递的查询字符串
-      this.$$router.push({name: 'search', params: this.$route.params})
-      // this.getSearch()
+      this.$router.push({ name: 'search', params: this.$route.params })
     },
-    delKeyword(){
+    // 移除关键词
+    delKeyword () {
+      // 1. 设置关键词为空
       this.searchQuery.keyword = undefined
-      this.$bus.$emit('cleanKey')
-      this.$storer.push({name: 'search', query: this.$route.query})
+      // 2. 发布 清除关键词的事件
+      this.$bus.$emit('clearKw')
+      // 3. 跳转路由 清除路由中的关键词
+      this.$router.push({ name: 'search', query: this.$route.query })
     },
     // 移除品牌
-    delTrademark(){
+    delTrademark  () {
+      // 1. 设置品牌名为空
       this.searchQuery.trademark = undefined
+      // 2. 调用函数 获取搜索结果
       this.getSearch()
     },
     // 移除属性
-    delProps(i){
-      this.searchQuery.props.splice(i,1)
-      // 2.调用函数 获取搜索结果
+    delProps (i) {
+      // 1. 根据索引移除 对应数组对应属性
+      this.searchQuery.props.splice(i, 1)
+      // 2. 调用函数 获取搜索结果
       this.getSearch()
-    },
-    changeSort(sort){
-         var sort2 = ''
-        if (this.searchQuery.order.includes(sort)){
-          sort2 = this.searchQuery.order.includes('desc') ? 'asc' : 'desc'
-        }
-        this.searchQuery.order = `${sort}:${sort2}`
-        this.getSearch()
     }
   }
 }
@@ -199,14 +226,14 @@ export default {
                               padding: 11px 15px;
                               color: #777;
                               text-decoration: none;
-                              &:hover{
-                                  color: #777;
-                              }
+                            &:hover {
+                              color: #777 !important;
+                            }
                           }
                           &.active{
                               a{
                                   background: #e1251b;
-                                  color: #fff;
+                                  color: #fff !important;
                               }
                           }
                       }

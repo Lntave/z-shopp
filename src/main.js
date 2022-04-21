@@ -10,7 +10,7 @@ import TypeNav from '@/components/TypeNav'
 import Slide from '@/components/Slide'
 
 // 初始化CSS
-// import 'normalize.css'
+import 'normalize.css'
 // 重置CSS
 import './styles/reset.scss'
 
@@ -20,8 +20,15 @@ Vue.config.productionTip = false
 Vue.component('TypeNav', TypeNav)
 Vue.component('Slide', Slide)
 
-//
+// 全局注册事件处理中心
 Vue.prototype.$bus = new Vue()
+
+// // 设置全局路由守卫
+// router.beforeEach((to, from, next) => {
+//   // 设置页面滚动条置顶
+//   window.scrollTo({ top: 0 })
+//   next()
+// })
 
 new Vue({
   router,

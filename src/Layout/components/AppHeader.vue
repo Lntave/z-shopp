@@ -73,13 +73,15 @@ export default {
       this.$router.push({ name: 'search', params: { keyword: this.kw || undefined }, query: this.$route.query })
     }
   },
-  mounted(){
-    this.$bus.$on('cleanKey', () => {
+  mounted () {
+    // 订阅 清除关键词事件
+    this.$bus.$on('clearKw', () => {
       this.kw = ''
     })
   },
-  beforDestroy(){
-    this.$bus.$off('cleanKey')
+  beforeDestroy () {
+    // 取消订阅 清除关键词事件
+    this.$bus.$off('clearKw')
   }
 }
 </script>
