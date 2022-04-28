@@ -7,20 +7,26 @@
               <div class="loginList">
                   <p>智品汇欢迎您！</p>
                   <p>
-                      <span>请</span>
-                      <a href="###">登录</a>
-                      <a href="###" class="register">免费注册</a>
+                      <template v-if="!loginName">
+                        <span>请</span>
+                        <router-link to="/login">登录</router-link>
+                        <a href="javascript:" class="register">免费注册</a>
+                      </template>
+                      <template v-else>
+                        <span>{{loginName}}</span>
+                        <a href="javascript:" class="register">退出登录</a>
+                      </template>
                   </p>
               </div>
               <div class="typeList">
-                  <a href="###">我的订单</a>
+                  <a href="javascript:">我的订单</a>
                   <router-link to="/cart">我的购物车</router-link>
-                  <a href="###">我的智品汇</a>
-                  <a href="###">智品汇会员</a>
-                  <a href="###">企业采购</a>
-                  <a href="###">关注智品汇</a>
-                  <a href="###">合作招商</a>
-                  <a href="###">商家后台</a>
+                  <a href="javascript:">我的智品汇</a>
+                  <a href="javascript:">智品汇会员</a>
+                  <a href="javascript:">企业采购</a>
+                  <a href="javascript:">关注智品汇</a>
+                  <a href="javascript:">合作招商</a>
+                  <a href="javascript:">商家后台</a>
               </div>
           </div>
       </div>
@@ -54,12 +60,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'AppHeader',
   data () {
     return {
       kw: ''
     }
+  },
+  computed: {
+    ...mapGetters(['loginName'])
   },
   methods: {
     goSearch () {

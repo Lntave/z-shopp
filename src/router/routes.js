@@ -1,8 +1,10 @@
 // 路由表配置
 // 导入布局组件
 import Layout from '@/layout'
+import LoginLayout from '@/layout/LoginLayout'
 
 const routes = [
+  // 布局1
   {
     path: '/',
     component: Layout,
@@ -16,7 +18,20 @@ const routes = [
       // 商品详情页  【通过设置props:true 将路由参数解析到组件中的props对象中】
       { path: '/detail/:skuId', component: () => import('@/views/detail'), name: 'detail', props: true },
       // 购物车页
-      { path: '/cart', component: () => import('@/views/cart') }
+      { path: '/cart', component: () => import('@/views/cart') },
+      // 添加购物车成功页
+      { path: '/addCart', component: () => import('@/views/cart/add-cart-ok') },
+      // 订单确认页  meta额外信息
+      { path: '/trade', component: () => import('@/views/trade'), meta: { isRole: true } }
+    ]
+  },
+  // 布局2
+  {
+    path: '/login',
+    component: LoginLayout,
+    children: [
+      // 登录页
+      { path: '', component: () => import('@/views/login') }
     ]
   }
 ]
