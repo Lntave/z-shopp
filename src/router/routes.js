@@ -22,7 +22,13 @@ const routes = [
       // 添加购物车成功页
       { path: '/addCart', component: () => import('@/views/cart/add-cart-ok') },
       // 订单确认页  meta额外信息
-      { path: '/trade', component: () => import('@/views/trade'), meta: { isRole: true } }
+      { path: '/trade', component: () => import('@/views/trade'), meta: { isRole: true } },
+      // 订单支付页
+      { path: '/play', component: () => import('@/views/pay'), meta: { isRole: true } },
+      // 订单支付成功页
+      { path: '/payok', component: () => import('@/views/pay/pay-ok'), meta: { isRole: true } },
+      // 我的订单
+      { path: '/myOrder', component: () => import('@/views/order'), meta: { isRole: true } }
     ]
   },
   // 布局2
@@ -31,7 +37,9 @@ const routes = [
     component: LoginLayout,
     children: [
       // 登录页
-      { path: '', component: () => import('@/views/login') }
+      { path: '', component: () => import('@/views/login') },
+       // 注册页
+      { path: '/register', component: () => import('@/views/register') }
     ]
   }
 ]

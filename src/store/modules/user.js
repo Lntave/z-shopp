@@ -39,6 +39,13 @@ export default {
       const res = await reqUserInfo()
       // 2. 将用户信息保存
       commit('SET_USERINFO', res)
+    },
+    // 用户退出登录
+    async logout ({ commit }){
+      // 发起请求退出登录
+     await reqLogin()
+    //  清理本地
+    commit('RESET_STATE')
     }
   },
   getters: {}

@@ -84,6 +84,11 @@ export default {
       this.$router.push({ name: 'search', params: { keyword: this.kw || undefined }, query: this.$route.query })
     }
   },
+  async logout(){
+    if(window.confirm('你确定要退出吗?')){
+     await this.$store.dispatch('user/logout')
+    }
+  },
   mounted () {
     // 订阅 清除关键词事件
     this.$bus.$on('clearKw', () => {
