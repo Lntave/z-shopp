@@ -10,16 +10,16 @@
                       <template v-if="!loginName">
                         <span>请</span>
                         <router-link to="/login">登录</router-link>
-                        <a href="javascript:" class="register">免费注册</a>
+                        <router-link to="/register" class="register">免费注册</router-link>
                       </template>
                       <template v-else>
                         <span>{{loginName}}</span>
-                        <a href="javascript:" class="register">退出登录</a>
+                        <a href="javascript:" class="register" @click="logout">退出登录</a>
                       </template>
                   </p>
               </div>
               <div class="typeList">
-                  <a href="javascript:">我的订单</a>
+                  <router-link to="/myOrder">我的订单</router-link>
                   <router-link to="/cart">我的购物车</router-link>
                   <a href="javascript:">我的智品汇</a>
                   <a href="javascript:">智品汇会员</a>
@@ -82,11 +82,16 @@ export default {
       // 跳转到搜索页面 并将关键字 通过动态路由传入
       // 匹配结果为空时需要传递 undefined
       this.$router.push({ name: 'search', params: { keyword: this.kw || undefined }, query: this.$route.query })
-    }
-  },
-  async logout(){
-    if(window.confirm('你确定要退出吗?')){
-     await this.$store.dispatch('user/logout')
+    },
+    // 退出登录
+    async logout () {
+      if (window.confirm('你确定要退出吗？')) {
+        await this.$store.dispatch('user/logout')
+        // 刷新页面
+        // this.$router.go(0)
+        // 回到首页
+        this.$router.push('/')
+      }
     }
   },
   mounted () {

@@ -127,8 +127,8 @@
 
 <script>
 export default {
-  name: "Trade",
-};
+  name: 'Trade'
+}
 </script>
 
 <style lang="scss" scoped>
