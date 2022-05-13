@@ -18,3 +18,5 @@ export const updateAddress = data => request({ url: '/api/user/userAddress/auth/
 
 // 删除地址
 export const removeAddress = id => request({ url: '/api/user/userAddress/auth/delete/' + id, method: 'get' })
+//
+// export const Info = id => request({ url: '/api/user/userAddress/auth/delete/' + id, method: 'get' })
