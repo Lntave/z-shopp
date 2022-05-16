@@ -76,7 +76,7 @@
 export default {
   name: 'Register',
   // 2. 注册验证组件
-  // components: { ValidationProvider, ValidationObserver },
+  components: { ValidationProvider, ValidationObserver },
   data () {
     return {
       formInput: {

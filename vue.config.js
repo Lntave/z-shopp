@@ -5,7 +5,6 @@ module.exports = defineConfig({
   lintOnSave: false,
   // 自定义开发服务器
   devServer: {
-    open: true,
-    host: '127.0.0.1',
+    open: true
   }
 })

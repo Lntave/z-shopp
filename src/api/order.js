@@ -1,4 +1,4 @@
-所有请求接口的集合
+// 所有请求接口的集合
 import request from '@/utils/request'
 
 // 获取我的订单列表
@@ -18,5 +18,18 @@ export const updateAddress = data => request({ url: '/api/user/userAddress/auth/
 
 // 删除地址
 export const removeAddress = id => request({ url: '/api/user/userAddress/auth/delete/' + id, method: 'get' })
-//
-// export const Info = id => request({ url: '/api/user/userAddress/auth/delete/' + id, method: 'get' })
+
+// 获取地区
+export const reqRegion = () => request({ url: '/api/user/userAddress/auth/findBaseRegion', method: 'get' })
+
+// 获取省份
+export const reqProvince = id => request({ url: '/api/user/userAddress/auth/findBaseProvinceByRegionId/' + id, method: 'get' })
+
+// 提交订单
+export const reqSubmitOrder = (tradeNo, data) => request({ url: '/api/order/auth/submitOrder?tradeNo=' + tradeNo, method: 'post', data })
+
+// 获取支付信息
+export const reqPayInfo = id => request({ url: '/api/payment/weixin/createNative/' + id, method: 'get' })
+
+// 获取支付状态
+export const reqPayState = id => request({ url: '/api/payment/weixin/queryPayStatus/' + id, method: 'get' })

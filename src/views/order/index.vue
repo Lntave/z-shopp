@@ -75,71 +75,43 @@
             </div>
             <!-- 订单列表 -->
             <div class="orders">
-              <table
-                class="order-item"
-                v-for="order in orderList"
-                :key="order.id"
-              >
+              <table class="order-item" v-for="order in orderList" :key="order.id">
                 <thead>
                   <tr>
                     <th colspan="5">
                       <span class="ordertitle">
-                        {{ order.createTime }} 订单编号：{{ order.outTradeNo }}
-                        <span class="pull-right delete"
-                          ><img src="@/assets/images/delete.png" />
+                        {{order.createTime}} 订单编号：{{order.outTradeNo}}
+                        <span class="pull-right delete"><img src="@/assets/images/delete.png" />
                         </span>
                       </span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="(item, i) in order.orderDetailList"
-                    :key="item.skuId"
-                  >
+                  <tr v-for="item, i in order.orderDetailList" :key="item.skuId">
                     <td width="60%">
                       <div class="typographic">
-                        <img :src="item.imgUrl" width="80" height="80" />
-                        <a href="#" class="block-text">{{ item.skuName }}</a>
-                        <span>x{{ item.skuNum }}</span>
+                        <img :src="item.imgUrl" width="80" height="80"/>
+                        <a href="#" class="block-text">{{item.skuName}}</a>
+                        <span>x{{item.skuNum}}</span>
                         <a href="#" class="service">售后申请</a>
                       </div>
                     </td>
                     <template v-if="i === 0">
-                      <td
-                        :rowspan="order.orderDetailList.length"
-                        width="8%"
-                        class="center"
-                      >
-                        {{ order.consignee }}
-                      </td>
-                      <td
-                        :rowspan="order.orderDetailList.length"
-                        width="13%"
-                        class="center"
-                      >
+                      <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{order.consignee}}</td>
+                      <td :rowspan="order.orderDetailList.length" width="13%" class="center">
                         <ul class="unstyled">
-                          <li>总金额¥{{ order.totalAmount }}.00</li>
+                          <li>总金额¥{{order.totalAmount}}.00</li>
                           <li>在线支付</li>
                         </ul>
                       </td>
-                      <td
-                        :rowspan="order.orderDetailList.length"
-                        width="8%"
-                        class="center"
-                      >
-                        <a href="#" class="btn">{{ order.orderStatusName }} </a>
+                      <td :rowspan="order.orderDetailList.length" width="8%" class="center">
+                        <a href="#" class="btn">{{order.orderStatusName}} </a>
                       </td>
-                      <td
-                        :rowspan="order.orderDetailList.length"
-                        width="13%"
-                        class="center"
-                      >
+                      <td :rowspan="order.orderDetailList.length" width="13%" class="center">
                         <ul class="unstyled">
                           <li>
-                            <a href="mycomment.html" target="_blank"
-                              >评价|晒单</a
-                            >
+                            <a href="mycomment.html" target="_blank">评价|晒单</a>
                           </li>
                         </ul>
                       </td>
@@ -149,12 +121,7 @@
               </table>
             </div>
             <!-- 分页器 -->
-            <Pagination
-              :total="total"
-              :pageSize="4"
-              :page="page"
-              @pageChange="pageChange"
-            ></Pagination>
+            <Pagination :total="total" :pageSize="4" :page="page" @pageChange="pageChange"></Pagination>
           </div>
         </div>
       </div>
@@ -163,39 +130,39 @@
 </template>
 
 <script>
-import { reqMyOrder } from "@/api/order";
+import { reqMyOrder } from '@/api/order'
 
 export default {
-  name: "MyOrder",
-  data() {
+  name: 'MyOrder',
+  data () {
     return {
       orderList: [], // 订单列表
       page: 1, // 当前页码
-      total: 0, // 总条数
-    };
+      total: 0 // 总条数
+    }
   },
   methods: {
     // 获取订单列表
-    async getOrderList() {
-      const { records, total } = await reqMyOrder(this.page, 4);
-      this.total = total;
-      this.orderList = records;
+    async getOrderList () {
+      const { records, total } = await reqMyOrder(this.page, 4)
+      this.total = total
+      this.orderList = records
       // // 设置滚动条回到顶部
       // document.querySelector('html').scrollTo({ y: 0 })
     },
     // 页码改变
-    pageChange(index) {
+    pageChange (index) {
       // console.log(index)
       // 1. 改变页码
-      this.page = index;
+      this.page = index
       // 2. 发起请求
-      this.getOrderList();
-    },
+      this.getOrderList()
+    }
   },
-  mounted() {
-    this.getOrderList();
-  },
-};
+  mounted () {
+    this.getOrderList()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
